@@ -11,8 +11,8 @@ const TTL_MINS =
     : 1440; // 24 hours
 
 // API endpoints
-const GET_URL = "https://memo.upstash.com/api/get";
-const SET_URL = "https://memo.upstash.com/api/set";
+const GET_URL = "https://memo-upstash.vercel.app/api/get";
+const SET_URL = "https://memo-upstash.vercel.app/api/set";
 
 const server = new McpServer({
   name: "memo-mcp-server",

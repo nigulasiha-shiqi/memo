@@ -106,7 +106,7 @@ Set the same environment variables in your Vercel project settings.
 
 ### 4. Point MCP to your API
 
-The MCP server uses `https://memo.upstash.com` by default. To use your own API, modify `index.ts`:
+The MCP server uses `https://memo-upstash.vercel.app` by default. To use your own API, modify `index.ts`:
 
 ```typescript
 const GET_URL = "https://your-api.vercel.app/api/get";
