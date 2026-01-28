@@ -12,6 +12,12 @@ When you're working with an AI agent and need to:
 
 Just say `memo set` and the agent will save structured context (goal, completed tasks, pending tasks, decisions, relevant files). Get a short ID back, use `memo get <id>` anywhere to restore context.
 
+
+
+https://github.com/user-attachments/assets/f96798e1-2f8b-4de3-9431-b7bc52c58dfa
+
+
+
 ## Installation
 
 ### Claude Code
