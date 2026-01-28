@@ -20,10 +20,19 @@ Just say `memo set` and the agent will save structured context (goal, completed 
 claude mcp add memo -- npx -y @upstash/memo
 ```
 
-### Open Code
+### OpenCode
 
-```bash
-opencode mcp add memo -- npx -y @upstash/memo
+Add to your `opencode.json`:
+
+```json
+{
+  "mcp": {
+    "memo": {
+      "type": "local",
+      "command": ["npx", "-y", "@upstash/memo"]
+    }
+  }
+}
 ```
 
 ### Claude Desktop / Cursor
