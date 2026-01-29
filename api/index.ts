@@ -26,6 +26,20 @@ app.use(async (c, next) => {
   return next();
 });
 
+// API key authentication middleware (optional, only if API_SECRET_KEY is set)
+app.use(async (c, next) => {
+  const secretKey = process.env.API_SECRET_KEY;
+  if (!secretKey) {
+    // No secret key configured, skip authentication
+    return next();
+  }
+  const apiKey = c.req.header("Authorization")?.replace("Bearer ", "");
+  if (apiKey !== secretKey) {
+    return c.json({ error: "Unauthorized" }, 401);
+  }
+  return next();
+});
+
 // Accept id from query params, path, or body
 app.all("/get/:id?", async (c) => {
   let id = c.req.param("id") || c.req.query("id");

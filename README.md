@@ -103,7 +103,10 @@ Create a `.env` file with your Upstash Redis credentials:
 ```
 UPSTASH_REDIS_REST_URL=your-redis-url
 UPSTASH_REDIS_REST_TOKEN=your-redis-token
+API_SECRET_KEY=your-secret-key
 ```
+
+The `API_SECRET_KEY` is optional. If set, all API requests must include an `Authorization: Bearer <key>` header.
 
 ### 2. Run locally
 
@@ -128,6 +131,12 @@ const GET_URL = "https://your-api.vercel.app/api/get";
 const SET_URL = "https://your-api.vercel.app/api/set";
 ```
 
+If you configured `API_SECRET_KEY`, add the `--api-key` argument when running the MCP:
+
+```bash
+claude mcp add memo -- npx -y @upstash/memo --api-key your-secret-key
+```
+
 ## Options
 
 ### `--ttl-mins`
@@ -140,6 +149,21 @@ Set expiration time in minutes. Default is 1440 (24 hours).
     "memo": {
       "command": "npx",
       "args": ["-y", "@upstash/memo", "--ttl-mins", "4320"]
+    }
+  }
+}
+```
+
+### `--api-key`
+
+API key for authenticated self-hosted servers. Only needed if your server has `API_SECRET_KEY` configured.
+
+```json
+{
+  "mcpServers": {
+    "memo": {
+      "command": "npx",
+      "args": ["-y", "@upstash/memo", "--api-key", "your-secret-key"]
     }
   }
 }

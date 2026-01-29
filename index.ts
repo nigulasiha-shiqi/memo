@@ -10,9 +10,25 @@ const TTL_MINS =
     ? parseInt(process.argv[ttlIndex + 1], 10)
     : 1440; // 24 hours
 
+// Parse --api-key arg
+const apiKeyIndex = process.argv.indexOf("--api-key");
+const API_KEY =
+  apiKeyIndex !== -1 && process.argv[apiKeyIndex + 1]
+    ? process.argv[apiKeyIndex + 1]
+    : undefined;
+
 // API endpoints
 const GET_URL = "https://memo-upstash.vercel.app/api/get";
 const SET_URL = "https://memo-upstash.vercel.app/api/set";
+
+// Helper to get fetch headers
+const getHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {};
+  if (API_KEY) {
+    headers["Authorization"] = `Bearer ${API_KEY}`;
+  }
+  return headers;
+};
 
 const server = new McpServer({
   name: "memo-mcp-server",
@@ -31,7 +47,9 @@ server.registerTool(
   },
   async ({ id }: { id: string }) => {
     try {
-      const response = await fetch(`${GET_URL}?id=${encodeURIComponent(id)}`);
+      const response = await fetch(`${GET_URL}?id=${encodeURIComponent(id)}`, {
+        headers: getHeaders(),
+      });
       if (!response.ok) {
         return {
           content: [
@@ -130,7 +148,7 @@ server.registerTool(
     try {
       const response = await fetch(SET_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getHeaders() },
         body: JSON.stringify({
           summary: JSON.stringify(context),
           ttlMins: TTL_MINS,
