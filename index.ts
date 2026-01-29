@@ -3,26 +3,29 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod/v3";
 
-// Parse --ttl-mins arg
+// Parse --ttl-mins arg (env: MEMO_TTL_MINS)
 const ttlIndex = process.argv.indexOf("--ttl-mins");
 const TTL_MINS =
   ttlIndex !== -1 && process.argv[ttlIndex + 1]
     ? parseInt(process.argv[ttlIndex + 1], 10)
-    : 1440; // 24 hours
+    : process.env.MEMO_TTL_MINS
+      ? parseInt(process.env.MEMO_TTL_MINS, 10)
+      : 1440; // 24 hours
 
-// Parse --api-key arg
+// Parse --api-key arg (env: MEMO_API_KEY)
 const apiKeyIndex = process.argv.indexOf("--api-key");
 const API_KEY =
   apiKeyIndex !== -1 && process.argv[apiKeyIndex + 1]
     ? process.argv[apiKeyIndex + 1]
-    : undefined;
+    : process.env.MEMO_API_KEY || undefined;
 
-// Parse --api-url arg
+// Parse --api-url arg (env: MEMO_API_URL)
 const apiUrlIndex = process.argv.indexOf("--api-url");
-const API_BASE_URL =
+const API_BASE_URL = (
   apiUrlIndex !== -1 && process.argv[apiUrlIndex + 1]
-    ? process.argv[apiUrlIndex + 1].replace(/\/$/, "") // remove trailing slash
-    : "https://memo-upstash.vercel.app";
+    ? process.argv[apiUrlIndex + 1]
+    : process.env.MEMO_API_URL || "https://memo-upstash.vercel.app"
+).replace(/\/$/, ""); // remove trailing slash
 
 // API endpoints
 const GET_URL = `${API_BASE_URL}/api/get`;

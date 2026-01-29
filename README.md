@@ -138,46 +138,40 @@ claude mcp add memo -- npx -y @dingx/memo --api-url https://your-api.vercel.app 
 
 ## Options
 
-### `--ttl-mins`
+All options can be set via command-line arguments or environment variables. Command-line arguments take precedence.
 
-Set expiration time in minutes. Default is 1440 (24 hours).
+| Option | Env Variable | Description | Default |
+|--------|--------------|-------------|---------|
+| `--ttl-mins` | `MEMO_TTL_MINS` | Expiration time in minutes | 1440 (24h) |
+| `--api-url` | `MEMO_API_URL` | Custom API server URL | `https://memo-upstash.vercel.app` |
+| `--api-key` | `MEMO_API_KEY` | API key for authenticated servers | - |
+
+### Using command-line arguments
 
 ```json
 {
   "mcpServers": {
     "memo": {
       "command": "npx",
-      "args": ["-y", "@dingx/memo", "--ttl-mins", "4320"]
+      "args": ["-y", "@dingx/memo", "--api-url", "https://your-api.vercel.app", "--api-key", "your-secret-key"]
     }
   }
 }
 ```
 
-### `--api-url`
-
-Custom API server URL for self-hosted deployments. Default is `https://memo-upstash.vercel.app`.
+### Using environment variables
 
 ```json
 {
   "mcpServers": {
     "memo": {
       "command": "npx",
-      "args": ["-y", "@dingx/memo", "--api-url", "https://your-api.vercel.app"]
-    }
-  }
-}
-```
-
-### `--api-key`
-
-API key for authenticated self-hosted servers. Only needed if your server has `API_SECRET_KEY` configured.
-
-```json
-{
-  "mcpServers": {
-    "memo": {
-      "command": "npx",
-      "args": ["-y", "@dingx/memo", "--api-key", "your-secret-key"]
+      "args": ["-y", "@dingx/memo"],
+      "env": {
+        "MEMO_API_URL": "https://your-api.vercel.app",
+        "MEMO_API_KEY": "your-secret-key",
+        "MEMO_TTL_MINS": "4320"
+      }
     }
   }
 }
