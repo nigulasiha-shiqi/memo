@@ -64,13 +64,17 @@ app.all("/get/:id?", async (c) => {
   if (!id) {
     return c.json({ error: "Missing id parameter" }, 400);
   }
-  const summary = await redis.get(id);
-  if (!summary) {
+  const data = await redis.get(id);
+  if (!data) {
     return c.json({ error: "Summary not found" }, 404);
   }
-  // Upstash auto-parses JSON, so stringify if we got an object back
-  const summaryStr = typeof summary === "string" ? summary : JSON.stringify(summary);
-  return c.json({ summary: summaryStr });
+  // Upstash auto-parses JSON, so handle both string and object
+  if (typeof data === "object" && data !== null) {
+    const { name, summary } = data as { name?: string; summary: string };
+    return c.json({ name, summary });
+  }
+  // Legacy format: just summary string
+  return c.json({ summary: data });
 });
 
 app.post("/set", async (c) => {
@@ -82,8 +86,11 @@ app.post("/set", async (c) => {
   }
   const ttlMins = body.ttlMins || 1440; // 24 hours
   const id = nanoid();
-  await redis.set(id, summary, { ex: ttlMins * 60 });
-  return c.json({ id, message: "Data received" });
+  const name = body.name || undefined; // Only use name if provided
+
+  // Store as object with name and summary
+  await redis.set(id, { name, summary }, { ex: ttlMins * 60 });
+  return c.json({ id, name, message: "Data received" });
 });
 
 export default app;

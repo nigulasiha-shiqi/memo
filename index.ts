@@ -50,14 +50,15 @@ server.registerTool(
   {
     title: "Memo Get",
     description:
-      "Retrieve saved conversation context by ID. Use when user says 'memo get <id>' or pastes a memo ID.",
+      `Retrieve saved conversation context by ID from ${GET_URL}. Use when user says 'memo get <id>' or pastes a memo ID.`,
     inputSchema: {
       id: z.string().describe("The memo ID (e.g., 4tJ630XqhCV5gQelx98pu)"),
     },
   },
   async ({ id }: { id: string }) => {
     try {
-      const response = await fetch(`${GET_URL}?id=${encodeURIComponent(id)}`, {
+      const url = `${GET_URL}?id=${encodeURIComponent(id)}`;
+      const response = await fetch(url, {
         headers: getHeaders(),
       });
       if (!response.ok) {
@@ -80,7 +81,8 @@ server.registerTool(
       // Try to parse and format structured context, fall back to raw text
       try {
         const ctx = JSON.parse(data.summary);
-        const formatted = `# Previous Session Context
+        const sessionName = data.name ? `# Session: ${data.name}\n\n` : "";
+        const formatted = `${sessionName}# Previous Session Context
 
 This is context from a previous conversation. Use this to continue the work where it left off. Start by reviewing the pending tasks and relevant files.
 
@@ -149,17 +151,19 @@ server.registerTool(
   {
     title: "Memo Set",
     description:
-      "Save conversation context for another AI agent. Use when user says 'memo set' or asks to save/store the conversation.",
+      "Save conversation context for another AI agent. Use when user says 'memo set' or 'memo set <name>'. If user provides a name after 'memo set', use it as the name parameter.",
     inputSchema: {
+      name: z.string().optional().describe("Optional session name provided by user (e.g., 'memo set 我的项目' -> name='我的项目')"),
       context: contextSchema,
     },
   },
-  async ({ context }: { context: Context }) => {
+  async ({ name, context }: { name?: string; context: Context }) => {
     try {
       const response = await fetch(SET_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...getHeaders() },
         body: JSON.stringify({
+          name,
           summary: JSON.stringify(context),
           ttlMins: TTL_MINS,
         }),
@@ -187,11 +191,12 @@ server.registerTool(
           ],
         };
       }
+      const displayName = data.name || id;
       return {
         content: [
           {
             type: "text",
-            text: `Conversation summary saved!\n\nTo restore this context later, copy and paste:\n\n\`\`\`\nmemo get ${id}\n\`\`\``,
+            text: `Conversation summary saved as "${displayName}"!\n\nTo restore this context later, copy and paste:\n\n\`\`\`\nmemo get ${id}\n\`\`\``,
           },
         ],
       };
