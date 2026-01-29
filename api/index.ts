@@ -8,15 +8,22 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(60, "1 m"),
-});
+// Rate limit is optional - disable with DISABLE_RATE_LIMIT=true
+const ratelimitEnabled = process.env.DISABLE_RATE_LIMIT !== "true";
+const ratelimit = ratelimitEnabled
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(60, "1 m"),
+    })
+  : null;
 
 const app = new Hono().basePath("/api");
 
 // Rate limit middleware
 app.use(async (c, next) => {
+  if (!ratelimit) {
+    return next();
+  }
   const ip = c.req.header("x-forwarded-for")?.split(",")[0] || "anonymous";
   const { success, remaining } = await ratelimit.limit(ip);
   c.header("X-RateLimit-Remaining", remaining.toString());

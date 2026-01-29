@@ -124,17 +124,16 @@ Set the same environment variables in your Vercel project settings.
 
 ### 4. Point MCP to your API
 
-The MCP server uses `https://memo-upstash.vercel.app` by default. To use your own API, modify `index.ts`:
-
-```typescript
-const GET_URL = "https://your-api.vercel.app/api/get";
-const SET_URL = "https://your-api.vercel.app/api/set";
-```
-
-If you configured `API_SECRET_KEY`, add the `--api-key` argument when running the MCP:
+Use the `--api-url` argument to point to your self-hosted API:
 
 ```bash
-claude mcp add memo -- npx -y @upstash/memo --api-key your-secret-key
+claude mcp add memo -- npx -y @upstash/memo --api-url https://your-api.vercel.app
+```
+
+If you configured `API_SECRET_KEY`, add the `--api-key` argument as well:
+
+```bash
+claude mcp add memo -- npx -y @upstash/memo --api-url https://your-api.vercel.app --api-key your-secret-key
 ```
 
 ## Options
@@ -149,6 +148,21 @@ Set expiration time in minutes. Default is 1440 (24 hours).
     "memo": {
       "command": "npx",
       "args": ["-y", "@upstash/memo", "--ttl-mins", "4320"]
+    }
+  }
+}
+```
+
+### `--api-url`
+
+Custom API server URL for self-hosted deployments. Default is `https://memo-upstash.vercel.app`.
+
+```json
+{
+  "mcpServers": {
+    "memo": {
+      "command": "npx",
+      "args": ["-y", "@upstash/memo", "--api-url", "https://your-api.vercel.app"]
     }
   }
 }

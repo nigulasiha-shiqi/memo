@@ -17,9 +17,16 @@ const API_KEY =
     ? process.argv[apiKeyIndex + 1]
     : undefined;
 
+// Parse --api-url arg
+const apiUrlIndex = process.argv.indexOf("--api-url");
+const API_BASE_URL =
+  apiUrlIndex !== -1 && process.argv[apiUrlIndex + 1]
+    ? process.argv[apiUrlIndex + 1].replace(/\/$/, "") // remove trailing slash
+    : "https://memo-upstash.vercel.app";
+
 // API endpoints
-const GET_URL = "https://memo-upstash.vercel.app/api/get";
-const SET_URL = "https://memo-upstash.vercel.app/api/set";
+const GET_URL = `${API_BASE_URL}/api/get`;
+const SET_URL = `${API_BASE_URL}/api/set`;
 
 // Helper to get fetch headers
 const getHeaders = (): Record<string, string> => {
