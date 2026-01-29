@@ -23,7 +23,7 @@ https://github.com/user-attachments/assets/f96798e1-2f8b-4de3-9431-b7bc52c58dfa
 ### Claude Code
 
 ```bash
-claude mcp add memo -- npx -y @upstash/memo
+claude mcp add memo -- npx -y @dingx/memo
 ```
 
 ### OpenCode
@@ -35,7 +35,7 @@ Add to your `opencode.json`:
   "mcp": {
     "memo": {
       "type": "local",
-      "command": ["npx", "-y", "@upstash/memo"]
+      "command": ["npx", "-y", "@dingx/memo"]
     }
   }
 }
@@ -50,7 +50,7 @@ Add to your MCP config:
   "mcpServers": {
     "memo": {
       "command": "npx",
-      "args": ["-y", "@upstash/memo"]
+      "args": ["-y", "@dingx/memo"]
     }
   }
 }
@@ -127,13 +127,13 @@ Set the same environment variables in your Vercel project settings.
 Use the `--api-url` argument to point to your self-hosted API:
 
 ```bash
-claude mcp add memo -- npx -y @upstash/memo --api-url https://your-api.vercel.app
+claude mcp add memo -- npx -y @dingx/memo --api-url https://your-api.vercel.app
 ```
 
 If you configured `API_SECRET_KEY`, add the `--api-key` argument as well:
 
 ```bash
-claude mcp add memo -- npx -y @upstash/memo --api-url https://your-api.vercel.app --api-key your-secret-key
+claude mcp add memo -- npx -y @dingx/memo --api-url https://your-api.vercel.app --api-key your-secret-key
 ```
 
 ## Options
@@ -147,7 +147,7 @@ Set expiration time in minutes. Default is 1440 (24 hours).
   "mcpServers": {
     "memo": {
       "command": "npx",
-      "args": ["-y", "@upstash/memo", "--ttl-mins", "4320"]
+      "args": ["-y", "@dingx/memo", "--ttl-mins", "4320"]
     }
   }
 }
@@ -162,7 +162,7 @@ Custom API server URL for self-hosted deployments. Default is `https://memo-upst
   "mcpServers": {
     "memo": {
       "command": "npx",
-      "args": ["-y", "@upstash/memo", "--api-url", "https://your-api.vercel.app"]
+      "args": ["-y", "@dingx/memo", "--api-url", "https://your-api.vercel.app"]
     }
   }
 }
@@ -177,7 +177,7 @@ API key for authenticated self-hosted servers. Only needed if your server has `A
   "mcpServers": {
     "memo": {
       "command": "npx",
-      "args": ["-y", "@upstash/memo", "--api-key", "your-secret-key"]
+      "args": ["-y", "@dingx/memo", "--api-key", "your-secret-key"]
     }
   }
 }
